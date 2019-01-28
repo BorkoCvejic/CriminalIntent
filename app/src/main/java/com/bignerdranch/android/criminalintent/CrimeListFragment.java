@@ -9,9 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.text.format.DateFormat;
 import java.util.List;
 
 public class CrimeListFragment extends Fragment {
@@ -47,21 +48,28 @@ public class CrimeListFragment extends Fragment {
 
         private TextView mTitleTextView;
         private TextView mDateTextView;
+        private ImageView mSolvedCrimeImageView;
 
         private Crime mCrime;
 
         public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_crime, parent,false));
+
+            //public CrimeHolder(View parent) {      //rade rework
+            //super(parent);
             itemView.setOnClickListener(this);
 
-            mTitleTextView = itemView.findViewById(R.id.crime_title);
-            mDateTextView = itemView.findViewById(R.id.crime_date);
+            mSolvedCrimeImageView = itemView.findViewById(R.id.iv_crime_solved);
+            mTitleTextView = itemView.findViewById(R.id.tv_crime_title);
+            mDateTextView = itemView.findViewById(R.id.tv_crime_date);
+
         }
 
         public void bind(Crime crime){
             mCrime = crime;
             mTitleTextView.setText(mCrime.getmTitle());
-            mDateTextView.setText(mCrime.getmDate().toString());
+            mDateTextView.setText(DateFormat.format("EEEE, MMM dd, yyyy",mCrime.getmDate()));
+            mSolvedCrimeImageView.setVisibility(crime.ismSolved() ? View.VISIBLE : View.GONE);
         }
 
         @Override
@@ -84,6 +92,9 @@ public class CrimeListFragment extends Fragment {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 
             return new CrimeHolder(layoutInflater, viewGroup);
+//            LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());          //rade rework
+//            View v = layoutInflater.inflate(R.layout.list_item_crime, viewGroup,false);
+//            return new CrimeHolder(v);
         }
 
         @Override
