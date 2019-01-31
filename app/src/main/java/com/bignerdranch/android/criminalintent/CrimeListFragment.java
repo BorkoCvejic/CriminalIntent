@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,9 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecycleView;
     private CrimeAdapter mAdapter;
 
+    private static final String CLICKED_CRIME_POSITION_ID = "clicked_crime_position_id";
+    private int clickedCrimePosition;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,18 +34,31 @@ public class CrimeListFragment extends Fragment {
 
         mCrimeRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        if(savedInstanceState != null){
+            clickedCrimePosition = savedInstanceState.getInt(CLICKED_CRIME_POSITION_ID);
+        }
+
         updateUI();
 
         return view;
     }
 
-    private void updateUI()
-    {
+    private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
+        if (mAdapter == null) {
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimeRecycleView.setAdapter(mAdapter);
+        }else{
+            mAdapter.notifyItemChanged(clickedCrimePosition);
+        }
+    }
 
-        mAdapter = new CrimeAdapter(crimes);
-        mCrimeRecycleView.setAdapter(mAdapter);
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateUI();
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -74,7 +91,11 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(getActivity(), mCrime.getmTitle() + "clicked!", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(getActivity(), CrimeActivity.class);
+            clickedCrimePosition = getAdapterPosition();
+//            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getmID());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getmID());
+            startActivity(intent);
         }
     }
 
@@ -107,5 +128,11 @@ public class CrimeListFragment extends Fragment {
         public int getItemCount() {
             return mCrimes.size();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(CLICKED_CRIME_POSITION_ID, clickedCrimePosition);
     }
 }
