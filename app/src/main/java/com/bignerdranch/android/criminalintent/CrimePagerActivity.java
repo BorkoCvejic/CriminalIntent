@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +21,9 @@ public class CrimePagerActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
+    private Button mFirstPageBtn;
+    private Button mLastPageBtn;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +56,50 @@ public class CrimePagerActivity extends AppCompatActivity {
                 break;
             }
         }
+
+        mFirstPageBtn = findViewById(R.id.btn_first_crime);
+        mFirstPageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(0);
+            }
+        });
+
+        mLastPageBtn = findViewById(R.id.btn_last_crime);
+        mLastPageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(mViewPager.getAdapter().getCount() - 1); //mCrimes.size()
+            }
+        });
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                if(mViewPager.getCurrentItem() == 0){
+                    mFirstPageBtn.setVisibility(View.INVISIBLE);
+                }else{
+                    mFirstPageBtn.setVisibility(View.VISIBLE);
+                }
+                if(mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1){
+                    mLastPageBtn.setVisibility(View.INVISIBLE);
+                }else{
+                    mLastPageBtn.setVisibility(View.VISIBLE);
+                }
+
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
 
     }
 
