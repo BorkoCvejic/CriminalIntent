@@ -8,12 +8,23 @@ public class Crime {
     private UUID mID;
     private String mTitle;
     private Date mDate;
-    private boolean mSolved;
 
+    private Date mTime;
+
+    private boolean mSolved;
     private boolean mRequiresPolice;
 
+    private String mSuspect;
+
     public Crime() {
-        mID = UUID.randomUUID();
+        this(UUID.randomUUID());
+//        mID = UUID.randomUUID();
+//        mDate = new Date();
+//        mTime = new Date();
+    }
+
+    public Crime(UUID id) {
+        mID = id;
         mDate = new Date();
     }
 
@@ -37,6 +48,14 @@ public class Crime {
         this.mDate = mDate;
     }
 
+    public Date getmTime() {
+        return mTime;
+    }
+
+    public void setmTime(Date mTime) {
+        this.mTime = mTime;
+    }
+
     public boolean ismSolved() {
         return mSolved;
     }
@@ -52,5 +71,18 @@ public class Crime {
     public void setmRequiresPolice(boolean mRequiresPolice) {
         this.mRequiresPolice = mRequiresPolice;
     }
+
+    public String getmSuspect() {
+        return mSuspect;
+    }
+
+    public void setmSuspect(String mSuspect) {
+        this.mSuspect = mSuspect;
+    }
+
+    public String getPhotoFileName() {
+        return "IMG_" + getmID().toString() + ".jpg";
+    }
+
 }
 
